@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.full_container {
+    width: 100%;
+    height: 100vh;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container {
+    width: 700px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ff8800;
+    justify-content: start;
+    border-radius: 20px;
+}
+input {
+    width: 400px;
+    height: 30px;
+    border: none;
+    outline: none;
+    border-bottom-left-radius: 40px;
+    border-top-left-radius: 40px;
+}
+h1 {
+    font-family: "Poppins", sans-serif;
+    line-height: 50px;
+    font-size: 20px;
+}
+.line1 {
+    width: 400px;
+    display: flex;
+    align-items: center;
+}
+.tasks {
+    width: 500px;
+    display: flex;
+}
+.submitButt {
+    margin-right: 10px;
+    border-bottom-right-radius: 40px;
+    border-top-right-radius: 40px;
+    width: 40px;
+    height: 30px;
+    border: none;
+    background-color: #ff0000;
+}
+select {
+    width: 120px;
+    height: 30px;
+    margin-top: 2px;
+    border-radius: 10px;
+}
+option{
+    background-color: #00ffbf;
+    font-family: "Poppins", sans-serif;
+    line-height: 50px;
+    font-size: 20px;
+}
+.submit {
+    width: 600px;
+    height: 500px;
+    margin-top: 10px;
+    text-align: center;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+.input {
+    width: 80%;
+    height: 30px;
+    text-align: start;
+    display: inline-block;
+    padding: 0 10px;
+    font-size: 20px;
+    color: #000;
+}
+.message {
+    width: auto;
+    height: auto;
+    padding: 5px 8px;
+    min-height: 40px;
+    border-radius: 8px;
+    color: #000000;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5px;
+    margin-left: 0;
+    text-align: center;
+    padding-left: 33px;
+    position: relative;
+}
+.changed {
+    background-color: green;
+}
+.changed::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 35px;
+    height: 36px;
+    border: 1px solid green;
+    cursor: pointer;
+    margin-left: 6px;
+}
+.changed::before {
+    position: absolute;
+    content: "";
+    top: 5px;
+    left: 13px;
+    border-style: solid;
+    border-color: rgb(255, 255, 255);
+    border-width: 0 2px 2px 0;
+    width: 10px;
+    height: 17px;
+    transform: rotate(45deg)
+}
+.edit-button {
+    background-color: blue;
+    color: white;
+    border: none;
+    margin-right: 0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+}
+.delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    margin-left: 0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+}
+.rrr{
+    font-family: "Poppins", sans-serif;
+    line-height: 20px;
+    font-size: 20px;
+}
+
+    </style>
+</head>
+<body>
+    
+    <div class="full_container">
+        <div class="container">
+            <h1>To Do List</h1> 
+            <div class="line1">
+                <div class="tasks">
+                    <input type="text" class="input">
+                    <button class="submitButt"><i class="fas fa-plus"></i></button>
+                </div>
+                <div class="jur">
+                </div>
+            </div>
+            <div class="submit">
+                
+            </div>
+        </div>
+    </div>
+    <script>
+        const input = document.querySelector("input");
+        const submit = document.querySelector(".submit");
+        const submitButt = document.querySelector(".submitButt");
+    
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTasks = JSON.parse(localStorage.getItem('tasks'));
+            if (savedTasks) {
+                savedTasks.forEach(task => {
+                    createTaskElement(task);
+                });
+            }
+        });
+    
+        submitButt.addEventListener("click", () => {
+            addTask();
+        });
+    
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addTask();
+            }
+        });
+    
+        function addTask() {
+            if (input.value === "") {
+                alert("Nimadur yoz ee");
+            } else {
+                createTaskElement(input.value);
+                input.value = "";
+                saveTasksToLocalStorage();
+            }
+        }
+    
+        function createTaskElement(taskText) {
+            const taskContainer = document.createElement("div");
+            taskContainer.classList.add("message");
+            const taskTextElement = document.createElement("p");
+            taskTextElement.classList.add("rrr");
+            taskTextElement.textContent = taskText;
+            const editButton = document.createElement("button");
+            editButton.textContent = "Edit";
+            editButton.classList.add("edit-button");
+            editButton.addEventListener("click", () => {
+                const newText = prompt("Nimani almashtirmoqchsan?");
+                if (newText !== null) {
+                    taskTextElement.textContent = newText;
+                    saveTasksToLocalStorage();
+                }
+            });
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.classList.add("delete-button");
+            deleteButton.addEventListener("click", () => {
+                taskContainer.remove();
+                saveTasksToLocalStorage();
+            });
+            taskContainer.appendChild(taskTextElement);
+            taskContainer.appendChild(deleteButton);
+            taskContainer.appendChild(editButton);
+            taskContainer.addEventListener("click", () => {
+                taskContainer.classList.toggle('changed');
+                if (taskContainer.classList.contains('changed')) {
+                    submit.appendChild(taskContainer); 
+                }
+            });
+            if (!taskContainer.classList.contains('changed')) {
+                submit.insertBefore(taskContainer, submit.firstChild);
+            }
+        }
+    
+        function saveTasksToLocalStorage() {
+            const tasks = Array.from(document.querySelectorAll('.message')).map(task => task.querySelector('p').textContent);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+    </script>
+    
+    
+
+</body>
+</html>
